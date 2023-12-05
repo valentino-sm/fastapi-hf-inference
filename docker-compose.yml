@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+      - MODEL=roneneldan/TinyStories-1M
+      - DB_URL=postgresql+asyncpg://postgres:postgres@postgres:5432/postgres
+    depends_on:
+      postgres:
+        condition: service_started
+      migrate:
+        condition: service_completed_successfully
+    command: uvicorn app.main:create_app --factory --host 0.0.0.0 --port 8000
+
+  migrate:
+    build: .
+    environment:
+      - DB_URL=postgresql+asyncpg://postgres:postgres@postgres:5432/postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: alembic upgrade head
+
+  postgres:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 5s
+      retries: 5

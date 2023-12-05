@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+sqlalchemy
+alembic
+psycopg2-binary
+asyncpg 
+punq
+pydantic
+pydantic-settings
+torch
+transformers
+numpy
