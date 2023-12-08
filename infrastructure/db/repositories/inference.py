@@ -1,5 +1,5 @@
 import json
-from typing import Any, TypeVar
+from typing import Any, Sequence, TypeVar
 
 from infrastructure.db.abc_repository import BaseRepository
 from infrastructure.db.models.inference import Inference
@@ -20,3 +20,6 @@ class InferenceRepository:
         return await self._repository.create_obj(
             Inference, prompt=prompt, response=response, json_data=json.dumps(kwargs)
         )
+
+    async def get_all_inferences(self) -> Sequence[Inference]:
+        return await self._repository.get_all(Inference)

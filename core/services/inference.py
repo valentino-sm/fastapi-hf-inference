@@ -32,3 +32,7 @@ class InferenceService:
                 **request.kwargs,
             )
         return response
+
+    async def get_all_inferences(self):
+        async with self._session_manager():
+            return await self._inference_repository.get_all_inferences()
